@@ -387,12 +387,6 @@ app.register_blueprint(productos_bp)
 
 ---
 
-## 📄 Licencia
-
-Este proyecto está bajo licencia MIT. Ver archivo LICENSE para más detalles.
-
----
-
 ## 🤝 Contribución
 
 Las contribuciones son bienvenidas. Por favor:
