@@ -413,6 +413,6 @@ Para reportar bugs o sugerir mejoras, abre un issue en el repositorio.
 - [JWT Extended](https://flask-jwt-extended.readthedocs.io/)
 
 ---
-
-**Creado por:** Sebastian Henao
-**Última actualización:** Noviembre 2025 
+<p align="center">
+  <b>Hecho con &#10084; por: Sebastián. </b>
+</p>
