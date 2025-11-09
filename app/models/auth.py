@@ -1,5 +1,6 @@
 from tortoise import fields, models
 from passlib.hash import pbkdf2_sha256
+from pydantic import BaseModel
 
 class UserLogin(models.Model):
     id = fields.IntField(pk=True)
@@ -14,3 +15,17 @@ class UserLogin(models.Model):
     def verify_password(self, raw_password: str) -> bool:
         return pbkdf2_sha256.verify(raw_password, self.password)
 
+class User(BaseModel):
+    username: str
+    password: str
+
+class TokenResponse(BaseModel):
+    token: str
+    user_id: int
+    user_role: str
+
+class UserResponse(BaseModel):
+    message: str
+
+class ErrorResponse(BaseModel):
+    message: str

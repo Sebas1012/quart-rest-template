@@ -9,7 +9,7 @@ def init_db(app, db_url: str):
         register_tortoise(
             app,
             db_url=db_url,
-            modules={"models": ["app.models.login"]},
+            modules={"models": ["app.models.auth"]},
             generate_schemas=True,
         )
         tortoise_configured = True

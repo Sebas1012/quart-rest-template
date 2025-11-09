@@ -1,16 +1,18 @@
-from quart import request, Blueprint, jsonify
+from quart import Blueprint
 from quart_jwt_extended import create_access_token
-from app.models.auth import UserLogin
+from app.models.auth import UserLogin, TokenResponse, User, UserResponse, ErrorResponse
 from passlib.hash import pbkdf2_sha256
-from app.utils.role_validator import role_required
+from quart_schema import validate_request, validate_response
 
-auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 
 @auth_bp.route('/token', methods=['POST'])
-async def token():
-    data = await request.get_json()
-    username = data['username']
-    password = data['password']
+@validate_request(User)
+@validate_response(TokenResponse, 200)
+@validate_response(ErrorResponse, 401)
+async def token(data: User):
+    username = data.username
+    password = data.password
 
     user = await UserLogin.filter(username=username).first()
 
@@ -18,19 +20,21 @@ async def token():
         additional_claims = {'role': user.user_rol}
         access_token = create_access_token(identity=user.id, user_claims=additional_claims)
 
-        return jsonify({
+        return {
             'user_id': user.id,
             'user_role': user.user_rol,
             'token': access_token
-        }), 200
-    else:
-        return jsonify({'message': 'Invalid credentials'}), 401
+        }, 200
+    
+    return {'message': 'Invalid username or password'}, 401
     
 @auth_bp.route('/create-user', methods=['POST'])
-async def create_user():
-    data = await request.get_json()
-    username = data['username']
-    password = data['password']
+@validate_request(User)
+@validate_response(UserResponse, 201)
+@validate_response(ErrorResponse, 409)
+async def create_user(data: User):
+    username = data.username
+    password = data.password
 
     user = await UserLogin.filter(username=username).first()
 
@@ -38,6 +42,6 @@ async def create_user():
         user = UserLogin(username=username, password=pbkdf2_sha256.hash(password))
         await user.save() 
 
-        return jsonify({'message': 'User created successfully'}), 201
-    else:
-        return jsonify({'message': 'User already exists'}), 409
+        return {'message': 'User created successfully'}, 201
+
+    return {'message': 'User already exists'}, 409
