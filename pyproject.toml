@@ -18,6 +18,7 @@ quart-schema = "^0.22.0"
 tortoise-orm = "^0.25.1"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 pydantic = "^2.12.4"
+hypercorn = "^0.18.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "25.1.0"
